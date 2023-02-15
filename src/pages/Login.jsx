@@ -1,14 +1,34 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.svg";
+import { signIn, signInWithGoogle } from "../features/user/userSlice";
 const Login = () => {
-  const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  // redux
+  const dispatch = useDispatch();
+  const { user, isLoading, isError, error, email } = useSelector(state => state.user);
+  useEffect(() => {
+    if (isLoading) {
+      toast.loading("Logging in...", { id: "auth" });
+    }
+    if (!isLoading && isError) {
+      toast.error(error, { id: "auth" });
+    }
+    if (!isLoading && email) {
+      toast.success("Logged in!", { id: "auth" });
+      navigate("/");
+    }
+  }, [isLoading, isError, user])
+  // redux
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const { register, handleSubmit, reset } = useForm();
+
+  const onSubmit = ({ email, password }) => {
+    dispatch(signIn({ email, password }));
   };
 
   return (
@@ -58,6 +78,7 @@ const Login = () => {
               </div>
             </div>
           </form>
+          <button onClick={() => dispatch(signInWithGoogle())} className="mt-3 text-center w-full border border-primary hover:bg-primary hover:text-white font-medium p-2.5 hover:font-bold duration-200 rounded-full">Login with Google</button>
         </div>
       </div>
     </div>

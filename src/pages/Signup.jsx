@@ -2,11 +2,31 @@ import React, { useEffect, useState } from "react";
 import loginImage from "../assets/login.svg";
 import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser, signInWithGoogle } from "../features/user/userSlice";
+import { toast } from "react-hot-toast";
 const Signup = () => {
+  const navigate = useNavigate();
+  // redux
+  const dispatch = useDispatch();
+  const { user, isLoading, isError, error, email } = useSelector(state => state.user);
+  useEffect(() => {
+    if (isLoading) {
+      toast.loading("Signing up...", { id: "auth" });
+    }
+    if (!isLoading && isError) {
+      toast.error(error, { id: "auth" });
+    }
+    if (!isLoading && email) {
+      toast.success("Signed in!", { id: "auth" });
+      navigate("/");
+    }
+  }, [isLoading, isError, user])
+  // redux
+
   const { handleSubmit, register, reset, control } = useForm();
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });
-  const navigate = useNavigate();
   const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
@@ -24,7 +44,7 @@ const Signup = () => {
   }, [password, confirmPassword]);
 
   const onSubmit = (data) => {
-    console.log(data);
+    dispatch(createUser({ email: data.email, password: data.password }));
   };
 
   return (
@@ -92,6 +112,7 @@ const Signup = () => {
               </div>
             </div>
           </form>
+          <button onClick={() => dispatch(signInWithGoogle())} className="mt-3 text-center w-full border border-primary hover:bg-primary hover:text-white font-medium p-2.5 hover:font-bold duration-200 rounded-full">Login with Google</button>
         </div>
       </div>
     </div>
