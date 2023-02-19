@@ -13,6 +13,7 @@ import EmployerDashboard from "../pages/employeeDashboard/EmployerDashboard";
 import CandidateDashboard from "../pages/candidateDashboard/CandidateDashboard";
 import AppliedJobs from "../pages/candidateDashboard/AppliedJobs";
 import PostedJobs from "../pages/employeeDashboard/PostedJobs";
+import DashboardHomeRedirect from "../layout/dashboard/DashboardHomeRedirect";
 
 const routes = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const routes = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "/dashboard",
+        element: <DashboardHomeRedirect />,
+      },
       {
         path: "add-job",
         element: <AddJob />,

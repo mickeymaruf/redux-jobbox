@@ -3,6 +3,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FiTrash } from "react-icons/fi";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { usePostJobMutation } from "../../features/job/jobApi";
 
 const AddJob = () => {
@@ -39,8 +40,12 @@ const AddJob = () => {
     remove: reqRemove,
   } = useFieldArray({ control, name: "requirements" });
 
+  const navigate = useNavigate();
   const onSubmit = (data) => {
     postJob({ ...data, owner: email, queries: [], applicants: [] });
+    if(isSuccess) {
+      navigate("/dashboard/posted-job")
+    }
   };
 
   return (

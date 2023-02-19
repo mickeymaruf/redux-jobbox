@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import JobCard from "../../components/reusable/JobCard";
 import Loading from "../../components/reusable/Loading";
-import { useGetAppliedJobsQuery, useGetPostedJobsQuery } from "../../features/job/jobApi";
+import { useGetPostedJobsQuery } from "../../features/job/jobApi";
 
 const PostedJobs = () => {
   const {
@@ -13,8 +13,6 @@ const PostedJobs = () => {
   if (isLoading) {
     return <Loading />;
   }
-
-  console.log(data);
 
   return (
     <div>

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import meeting from "../assets/meeting.jpg";
 import { BsArrowRightShort, BsArrowReturnRight } from "react-icons/bs";
-import { useApplyJobMutation, useAskQuestionMutation, useGetJobDetailsQuery, useReplyQuestionMutation } from "../features/job/jobApi"
-import { useParams } from "react-router-dom";
+import { useApplyJobMutation, useAskQuestionMutation, useCloseJobMutation, useGetJobDetailsQuery, useReplyQuestionMutation } from "../features/job/jobApi"
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -11,7 +11,7 @@ const JobDetails = () => {
   const { id } = useParams();
   const { _id: userId, email, role } = useSelector(state => state.auth.user);
 
-  const { data, isLoading } = useGetJobDetailsQuery(id);
+  const { data } = useGetJobDetailsQuery(id);
   const {
     companyName,
     position,
@@ -58,7 +58,6 @@ const JobDetails = () => {
   const [reply, setReply] = useState("");
   const handleSubmitReply = (id) => {
     replyQuestion({ reply, userId: id });
-    rese
   }
 
   return (
@@ -70,13 +69,16 @@ const JobDetails = () => {
         <div className='space-y-5'>
           <div className='flex justify-between items-center mt-5'>
             <h1 className='text-xl font-semibold text-primary'>{position}</h1>
-            {
-              applyLoading
-                ? <span className='py-2.5 px-5 rounded-full bg-gray-500 text-white border-white animate-pulse'>Loading...</span>
-                : applicants?.some(aplcnt => aplcnt.email === email)
-                  ? <button className='py-2.5 px-5 rounded-full bg-green-500 text-white border-white'>Applied</button>
-                  : <button onClick={handleApply} className='btn'>Apply</button>
-            }
+            <div>
+              {
+                role === "candidate" &&
+                applyLoading
+                  ? <span className='py-2.5 px-5 rounded-full bg-gray-500 text-white border-white animate-pulse'>Loading...</span>
+                  : applicants?.some(aplcnt => aplcnt.email === email)
+                    ? <button className='py-2.5 px-5 rounded-full bg-green-500 text-white border-white'>Applied</button>
+                    : <button onClick={handleApply} className='btn'>Apply</button>
+              }
+            </div>
           </div>
           <div>
             <h1 className='text-primary text-lg font-medium mb-3'>Overview</h1>
@@ -182,6 +184,7 @@ const JobDetails = () => {
             }
           </div>
         </div>
+        
       </div>
       <div className='col-span-3'>
         <div className='rounded-xl bg-primary/10 p-5 text-primary space-y-5'>

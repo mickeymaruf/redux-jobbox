@@ -1,10 +1,26 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCloseJobMutation } from "../../features/job/jobApi";
 
 const JobCard = ({ jobData }) => {
+  const { _id: userId, email, role } = useSelector(state => state.auth.user);
+
   const navigate = useNavigate();
-  const { _id, position, companyName, location, employmentType } =
+  const pathname = useLocation().pathname;
+
+  const { _id, position, companyName, location, employmentType, applicants } =
     jobData || {};
+
+  const [closeJob, { isSuccess, isLoading }] = useCloseJobMutation();
+  const handleCloseJob = () => {
+    closeJob(_id);
+    if (isSuccess) {
+      navigate("/dashboard/posted-job")
+    }
+  }
+
+  console.log(pathname.includes('/dashboard'));
 
   return (
     <div
@@ -25,10 +41,33 @@ const JobCard = ({ jobData }) => {
       </div>
       <div className='flex justify-between items-center mt-5'>
         <p>{employmentType}</p>
-        <button className='btn' onClick={() => navigate(`/job-details/${_id}`)}>
-          Details
-        </button>
+        <div>
+          {
+            pathname.includes('/dashboard') &&
+            <>
+              {
+                role === "employer" &&
+                  isLoading
+                  ? <button className='btn mr-2' disabled>
+                    Closing...
+                  </button>
+                  : <button className='btn mr-2' onClick={handleCloseJob}>
+                    Close Job
+                  </button>
+              }
+            </>
+          }
+          <button className='btn' onClick={() => navigate(`/job-details/${_id}`)}>
+            Details
+          </button>
+        </div>
       </div>
+      {
+        role === "employer" && pathname.includes('/dashboard') &&
+        <div className="rounded-xl bg-primary/10 p-3 mt-5 text-primary space-y-5">
+          <h3 className="font-bold">Total Applicants: {applicants?.length}</h3>
+        </div>
+      }
     </div>
   );
 };
