@@ -10,7 +10,8 @@ const Login = () => {
   const navigate = useNavigate();
   // redux
   const dispatch = useDispatch();
-  const { user, isLoading, isError, error, email } = useSelector(state => state.user);
+  const { user: { email }, isLoading, isError, error } = useSelector(state => state.auth);
+
   useEffect(() => {
     if (isLoading) {
       toast.loading("Logging in...", { id: "auth" });
@@ -22,7 +23,7 @@ const Login = () => {
       toast.success("Logged in!", { id: "auth" });
       navigate("/");
     }
-  }, [isLoading, isError, user])
+  }, [isLoading, isError, email])
   // redux
 
   const { register, handleSubmit, reset } = useForm();

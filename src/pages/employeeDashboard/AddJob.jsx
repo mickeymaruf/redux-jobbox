@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { FiTrash } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { usePostJobMutation } from "../../features/job/jobApi";
 
 const AddJob = () => {
-  const { handleSubmit, register, control } = useForm();
+  const [postJob, { data, isLoading, isSuccess }] = usePostJobMutation();
+  const { user: { companyName, email } } = useSelector(state => state.auth);
+
+  useEffect(() => {
+    if (isLoading) {
+      toast.loading("Posting...", { id: "job" });
+    }
+    if (!isLoading && isSuccess) {
+      toast.success("Posted!", { id: "job" });
+    }
+  }, [isLoading, isSuccess])
+
+  const { handleSubmit, register, control } = useForm({
+    defaultValues: {
+      companyName
+    }
+  });
   const {
     fields: resFields,
     append: resAppend,
@@ -21,7 +40,7 @@ const AddJob = () => {
   } = useFieldArray({ control, name: "requirements" });
 
   const onSubmit = (data) => {
-    console.log(data);
+    postJob({ ...data, owner: email, queries: [], applicants: [] });
   };
 
   return (

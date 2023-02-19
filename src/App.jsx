@@ -4,16 +4,18 @@ import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import auth from "./config/firebase/firebase.config";
-import { setUser } from "./features/user/userSlice";
+import { getUser, toggleLoading } from "./features/user/userSlice";
 import routes from "./routes/routes";
 
 function App() {
   const dispatch = useDispatch();
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(setUser(user.email));
+        dispatch(getUser(user.email));
       }
+      dispatch(toggleLoading());
     })
   }, []);
 

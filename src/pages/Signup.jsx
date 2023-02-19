@@ -9,7 +9,9 @@ const Signup = () => {
   const navigate = useNavigate();
   // redux
   const dispatch = useDispatch();
-  const { user, isLoading, isError, error, email } = useSelector(state => state.user);
+  const { user, isLoading, isError, error } = useSelector(state => state.auth);
+  const { email } = user;
+
   useEffect(() => {
     if (isLoading) {
       toast.loading("Signing up...", { id: "auth" });

@@ -11,6 +11,8 @@ import PrivateRoute from "../utils/PrivateRoute";
 import AddJob from "../pages/employeeDashboard/AddJob";
 import EmployerDashboard from "../pages/employeeDashboard/EmployerDashboard";
 import CandidateDashboard from "../pages/candidateDashboard/CandidateDashboard";
+import AppliedJobs from "../pages/candidateDashboard/AppliedJobs";
+import PostedJobs from "../pages/employeeDashboard/PostedJobs";
 
 const routes = createBrowserRouter([
   {
@@ -66,6 +68,14 @@ const routes = createBrowserRouter([
       {
         path: "add-job",
         element: <AddJob />,
+      },
+      {
+        path: "applied-job",
+        element: <AppliedJobs />,
+      },
+      {
+        path: "posted-job",
+        element: <PostedJobs />,
       },
       {
         path: "employer",
