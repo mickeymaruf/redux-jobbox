@@ -42,7 +42,7 @@ const AddJob = () => {
 
   const navigate = useNavigate();
   const onSubmit = (data) => {
-    postJob({ ...data, owner: email, queries: [], applicants: [] });
+    postJob({ ...data, owner: email, queries: [], applicants: [], messages: [] });
     if(isSuccess) {
       navigate("/dashboard/posted-job")
     }

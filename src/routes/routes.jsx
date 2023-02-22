@@ -14,6 +14,9 @@ import CandidateDashboard from "../pages/candidateDashboard/CandidateDashboard";
 import AppliedJobs from "../pages/candidateDashboard/AppliedJobs";
 import PostedJobs from "../pages/employeeDashboard/PostedJobs";
 import DashboardHomeRedirect from "../layout/dashboard/DashboardHomeRedirect";
+import CandidatesDetails from "../pages/employeeDashboard/CandidatesDetails";
+import Inbox from "../pages/employeeDashboard/Inbox";
+import Chat from "../pages/employeeDashboard/Chat";
 
 const routes = createBrowserRouter([
   {
@@ -79,6 +82,10 @@ const routes = createBrowserRouter([
         element: <AppliedJobs />,
       },
       {
+        path: "candidates-details/:jobId",
+        element: <CandidatesDetails />,
+      },
+      {
         path: "posted-job",
         element: <PostedJobs />,
       },
@@ -90,6 +97,16 @@ const routes = createBrowserRouter([
         path: "candidate",
         element: <CandidateDashboard />,
       },
+
+      {
+        path: "inbox",
+        element: <Inbox />,
+      },
+      {
+        path: "inbox/:id",
+        element: <Chat />,
+      },
+
     ],
   },
 ]);

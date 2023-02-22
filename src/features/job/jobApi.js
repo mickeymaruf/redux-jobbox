@@ -61,7 +61,48 @@ const jobApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["JobDetails"]
         }),
+
+        getApplicantsDetails: builder.mutation({
+            query: ({ data, jobId }) => ({
+                url: `/getApplicantsDetails/${jobId}`,
+                method: "POST",
+                body: data
+            }),
+        }),
+
+        sendMessage: builder.mutation({
+            query: (data) => ({
+                url: `/messages`,
+                method: "POST",
+                body: data
+            }),
+            invalidatesTags: ["Message"]
+        }),
+
+        getMessages: builder.query({
+            query: (email) => `/messages/${email}`
+        }),
+
+        getMessage: builder.query({
+            query: (id) => `/message/${id}`,
+            providesTags: ["Message"]
+        }),
+
     })
 });
 
-export const { usePostJobMutation, useGetJobQuery, useGetJobDetailsQuery, useApplyJobMutation, useGetAppliedJobsQuery, useAskQuestionMutation, useReplyQuestionMutation, useGetPostedJobsQuery, useCloseJobMutation } = jobApi;
+export const {
+    usePostJobMutation,
+    useGetJobQuery,
+    useGetJobDetailsQuery,
+    useApplyJobMutation,
+    useGetAppliedJobsQuery,
+    useAskQuestionMutation,
+    useReplyQuestionMutation,
+    useGetPostedJobsQuery,
+    useCloseJobMutation,
+    useGetApplicantsDetailsMutation,
+    useSendMessageMutation,
+    useGetMessagesQuery,
+    useGetMessageQuery,
+} = jobApi;

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCloseJobMutation } from "../../features/job/jobApi";
 
 const JobCard = ({ jobData }) => {
@@ -43,11 +43,10 @@ const JobCard = ({ jobData }) => {
         <p>{employmentType}</p>
         <div>
           {
-            pathname.includes('/dashboard') &&
+            pathname.includes('/dashboard') && role === "employer" &&
             <>
               {
-                role === "employer" &&
-                  isLoading
+                isLoading
                   ? <button className='btn mr-2' disabled>
                     Closing...
                   </button>
@@ -64,8 +63,9 @@ const JobCard = ({ jobData }) => {
       </div>
       {
         role === "employer" && pathname.includes('/dashboard') &&
-        <div className="rounded-xl bg-primary/10 p-3 mt-5 text-primary space-y-5">
+        <div className="rounded-xl bg-primary/10 p-3 mt-5 text-primary flex justify-between items-center">
           <h3 className="font-bold">Total Applicants: {applicants?.length}</h3>
+          <Link to={`/dashboard/candidates-details/${_id}`} className="hover:underline">View Candidates</Link>
         </div>
       }
     </div>
