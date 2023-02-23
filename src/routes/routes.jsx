@@ -103,7 +103,7 @@ const routes = createBrowserRouter([
         element: <Inbox />,
       },
       {
-        path: "inbox/:id",
+        path: "inbox/:person",
         element: <Chat />,
       },
 

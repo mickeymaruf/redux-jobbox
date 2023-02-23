@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGetApplicantsDetailsMutation, useGetJobDetailsQuery } from '../../features/job/jobApi';
 
 const CandidatesDetails = () => {
@@ -45,12 +45,9 @@ const CandidatesDetails = () => {
                             <p>Address: {address}</p>
                             <p>City: {city}</p>
                             <p>Postcode: {postcode}</p>
-                            <button
-                                onClick={() => setChatApplicant({ name: firstName + " " + lastName, email })}
-                                className='bg-primary/40 w-full rounded-lg py-2'
-                            >
-                                Send Message
-                            </button>
+                            <Link to={`/dashboard/inbox/${email}`} className="block w-full">
+                                <button className='bg-primary/40 w-full rounded-lg py-2'>Send Message</button>
+                            </Link>
                         </div>)
                 }
             </div>

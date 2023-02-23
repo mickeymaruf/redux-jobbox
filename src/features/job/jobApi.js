@@ -84,7 +84,7 @@ const jobApi = apiSlice.injectEndpoints({
         }),
 
         getMessage: builder.query({
-            query: (id) => `/message/${id}`,
+            query: ({ person, email }) => `/message/${person}/${email}`,
             providesTags: ["Message"]
         }),
 
