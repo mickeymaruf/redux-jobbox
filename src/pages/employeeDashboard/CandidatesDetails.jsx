@@ -48,6 +48,10 @@ const CandidatesDetails = () => {
                             <Link to={`/dashboard/inbox/${email}`} className="block w-full">
                                 <button className='bg-primary/40 w-full rounded-lg py-2'>Send Message</button>
                             </Link>
+                            <div>
+                                <button className='border border-primary/40 px-2 rounded-lg py-2 mr-2'>❌</button>
+                                <button className='border border-primary/40 px-2 rounded-lg py-2'>✔️</button>
+                            </div>
                         </div>)
                 }
             </div>

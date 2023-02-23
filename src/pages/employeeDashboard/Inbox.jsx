@@ -5,7 +5,7 @@ import { useGetMessagesQuery } from '../../features/job/jobApi';
 
 const Inbox = () => {
     const { email } = useSelector(state => state.auth.user);
-    const { data } = useGetMessagesQuery(email);
+    const { data } = useGetMessagesQuery(email, { refetchOnMountOrArgChange: true });
 
     const avatarImg = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
 

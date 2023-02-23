@@ -50,7 +50,7 @@ const Chat = () => {
         <div className='w-7/12 mx-auto mt-16 border border-primary/10 shadow-lg rounded-lg'>
             <div className='border-b shadow-sm p-4 flex justify-between items-center'>
                 <h3 className='text-xl'>Chatbox</h3>
-                <p>{"N/A"}</p>
+                <p>{person}</p>
             </div>
             <div ref={chatboxRef} className='max-h-[calc(100vh-16rem)] overflow-y-scroll p-5 pt-0'>
                 {
