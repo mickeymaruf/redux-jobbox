@@ -63,11 +63,20 @@ const jobApi = apiSlice.injectEndpoints({
         }),
 
         getApplicantsDetails: builder.mutation({
-            query: ({ data, jobId }) => ({
-                url: `/getApplicantsDetails/${jobId}`,
+            query: (data) => ({
+                url: `/getApplicantsDetails`,
                 method: "POST",
                 body: data
             }),
+        }),
+
+        modifyApplicantStatus: builder.mutation({
+            query: ({ data, jobId, applicant }) => ({
+                url: `/modifyApplicantStatus/${jobId}/${applicant}/`,
+                method: "PATCH",
+                body: data
+            }),
+            invalidatesTags: ["JobDetails"]
         }),
 
         sendMessage: builder.mutation({
@@ -105,4 +114,5 @@ export const {
     useSendMessageMutation,
     useGetMessagesQuery,
     useGetMessageQuery,
+    useModifyApplicantStatusMutation
 } = jobApi;
