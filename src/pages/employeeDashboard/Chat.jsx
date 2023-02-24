@@ -27,8 +27,6 @@ const Chat = () => {
         reset();
     }
 
-    console.log(data);
-
     // scroll stick to bottom
     const chatboxRef = useRef();
     useEffect(() => {

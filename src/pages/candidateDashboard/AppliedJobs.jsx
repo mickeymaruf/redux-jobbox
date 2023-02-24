@@ -15,8 +15,6 @@ const AppliedJobs = () => {
     return <Loading />;
   }
 
-  console.log(data);
-
   return (
     <div>
       <h1 className='text-xl py-5'>Applied jobs</h1>
@@ -30,7 +28,6 @@ const AppliedJobs = () => {
           })
           ?.sort((a, b) => {
             if (byDate === "lastApplied") {
-              console.log(b?.applicants?.find(applicant => applicant.email === email)?.appliedAt);
               return new Date(b?.applicants?.find(applicant => applicant.email === email)?.appliedAt) - new Date(a?.applicants?.find(applicant => applicant.email === email)?.appliedAt)
             }
             return new Date(a?.applicants?.find(applicant => applicant.email === email)?.appliedAt) - new Date(b?.applicants?.find(applicant => applicant.email === email)?.appliedAt)

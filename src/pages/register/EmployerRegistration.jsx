@@ -50,7 +50,6 @@ const EmployerRegistration = () => {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(postUser({ ...data, role: "employer" }));
   };
 

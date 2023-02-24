@@ -20,8 +20,6 @@ const JobCard = ({ jobData }) => {
     }
   }
 
-  console.log(pathname.includes('/dashboard'));
-
   return (
     <div
       key={_id}

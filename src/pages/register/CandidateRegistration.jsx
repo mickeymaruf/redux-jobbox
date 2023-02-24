@@ -15,7 +15,6 @@ const CandidateRegistration = () => {
     }
   });
   const term = useWatch({ control, name: "term" });
-  console.log(term);
   const navigate = useNavigate();
 
   const [postUser, { isLoading, data }] = usePostUserMutation();
@@ -28,7 +27,6 @@ const CandidateRegistration = () => {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(postUser({ ...data, role: "candidate" }));
     reset();
   };
