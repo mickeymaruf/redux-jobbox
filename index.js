@@ -9,7 +9,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.q66zrl2.mongodb.net/?retryWrites=true&w=majority`;
+const uri = process.env.DB_URL
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -21,6 +21,12 @@ const run = async () => {
     const db = client.db("jobbox");
     const userCollection = db.collection("user");
     const jobCollection = db.collection("job");
+    const messagesCollection = db.collection("messages");
+
+    app.get("/users", async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    });
 
     app.post("/user", async (req, res) => {
       const user = req.body;
@@ -49,7 +55,7 @@ const run = async () => {
 
       const filter = { _id: ObjectId(jobId) };
       const updateDoc = {
-        $push: { applicants: { id: ObjectId(userId), email } },
+        $push: { applicants: { id: ObjectId(userId), email, appliedAt: new Date(), status: "pending" } },
       };
 
       const result = await jobCollection.updateOne(filter, updateDoc);
@@ -120,8 +126,16 @@ const run = async () => {
     app.get("/applied-jobs/:email", async (req, res) => {
       const email = req.params.email;
       const query = { applicants: { $elemMatch: { email: email } } };
-      const cursor = jobCollection.find(query).project({ applicants: 0 });
+      const cursor = jobCollection.find(query);
       const result = await cursor.toArray();
+
+      res.send({ status: true, data: result });
+    });
+
+    app.get("/posted-jobs/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { owner: email };
+      const result = await jobCollection.find(query).toArray();
 
       res.send({ status: true, data: result });
     });
@@ -146,6 +160,119 @@ const run = async () => {
 
       res.send({ status: true, data: result });
     });
+
+    app.delete("/job/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const result = await jobCollection.deleteOne({ _id: ObjectId(id) });
+      res.send({ status: true, data: result });
+    });
+
+    // /getApplicantsDetails/:jobId
+    app.post("/getApplicantsDetails", async (req, res) => {
+      const applicants = req.body.applicants || [];
+
+      const cursor = userCollection.find(
+        { email: { $in: applicants }, role: "candidate" },
+      );
+      const result = await cursor.toArray();
+      res.send({ status: true, data: result });
+    });
+
+    app.patch("/modifyApplicantStatus/:jobId/:applicant/", async (req, res) => {
+      const jobId = req.params.jobId;
+      const applicant = req.params.applicant;
+      const status = req.body.status;
+
+      const filter = { _id: ObjectId(jobId), "applicants.email": applicant };
+      const updateDoc = { $set: { "applicants.$.status": status } }
+
+      const result = await jobCollection.updateOne(filter, updateDoc);
+
+      res.send({ status: true, data: result });
+    });
+
+    // messages
+    app.get("/messages/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = {
+        participants: { $in: [email] }
+      };
+
+      const result = await messagesCollection.find(query).toArray();
+      res.send({ status: true, data: result });
+    });
+
+    app.get("/message/:person/:email", async (req, res) => {
+      const person = req.params.person;
+      const email = req.params.email;
+
+      const filter = {
+        participants: { $all: [email, person] }
+      };
+
+      const result = await messagesCollection.findOne(filter);
+      res.send({ status: true, data: result });
+    });
+
+    app.post("/messages", async (req, res) => {
+      const from = req.body.from;
+      const to = req.body.to;
+      const text = req.body.text;
+
+      const participants = [from, to];
+
+      const filter = {
+        participants: { $all: participants }
+      };
+
+      const isExist = await messagesCollection.findOne(filter);
+
+
+      if (isExist) {
+        const updateDoc = {
+          $push: {
+            messages: {
+              from,
+              to,
+              text,
+              read: false
+            },
+          },
+        };
+
+
+        const result = await messagesCollection.updateOne(filter, updateDoc);
+
+        if (result?.acknowledged) {
+          return res.send({ status: true, data: result });
+        }
+
+
+
+      } else {
+        const insertDoc = {
+          participants,
+          messages: [{
+            from,
+            to,
+            text,
+            read: false
+          }],
+        };
+
+        const result = await messagesCollection.insertOne(insertDoc);
+
+        if (result?.acknowledged) {
+          return res.send({ status: true, data: result });
+        }
+
+      }
+
+
+      res.send({ status: false });
+    });
+
   } finally {
   }
 };
